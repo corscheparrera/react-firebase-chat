@@ -1,6 +1,5 @@
 import React, {Component} from 'react'
 import Chat from './Chat.jsx'
-import './App.css'
 
 class App extends Component {
   render () {
