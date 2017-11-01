@@ -9,18 +9,17 @@ class ChatOuter extends Component {
   constructor() {
     super()
     this.state = {
-      chat: [],
-      user: ''
+      user: '',
+      usersStatus: []
     }
-
   }
 
   handleUserLogin = (usernameValue) => {
     this.setState({
       user: usernameValue
     }, () => this.pushUsernameFirebase())
-
   }
+
   pushUsernameFirebase = () => {
 
     var ref = database.ref(`/users-${this.props.path}`)
@@ -29,15 +28,34 @@ class ChatOuter extends Component {
       .push({username: this.state.user, status: 'online'})
       .key
 
+    database
+      .ref(`/messages-${this.props.path}`)
+      .push({username: this.state.user, text: "I'm online"})
+
     var disconnectTask = {};
     disconnectTask[pushId] = {
       username: this.state.user,
       status: 'offline'
-    };
+    }
+
     ref
       .onDisconnect()
       .update(disconnectTask)
+
+    this.alertUserStatus('child_changed')
   }
+
+  alertUserStatus = (event) => {
+    database
+      .ref(`/users-${this.props.path}`)
+      .on(event, x => this.displayStatus(x.val()))
+  }
+  displayStatus = (data) => {
+    database
+      .ref(`/messages-${this.props.path}`)
+      .push({username: data.username, text: `I'm ${data.status}`})
+  }
+
   showMyComponent = () => {
     if (!this.state.user) {
       return true

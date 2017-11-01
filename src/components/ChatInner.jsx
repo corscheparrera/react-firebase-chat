@@ -31,7 +31,6 @@ class ChatInner extends Component {
   }
 
   updateState = (data) => {
-
     this.setState({
       chat: this
         .state
