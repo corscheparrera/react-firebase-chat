@@ -1,4 +1,4 @@
-import firebase from 'firebase'
+import Firebase from 'firebase'
 
 // Initialize Firebase
 var config = {
@@ -10,6 +10,6 @@ var config = {
   messagingSenderId: '905682083096'
 }
 
-var fire = firebase.initializeApp(config)
+var fire = Firebase.initializeApp(config)
 
 export default fire

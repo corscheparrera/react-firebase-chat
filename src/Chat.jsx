@@ -1,39 +1,48 @@
 import React, {Component} from 'react'
 import fire from './firebase.js'
 const database = fire.database()
-var messages = []
+
 class Chat extends Component {
+
   constructor() {
     super()
     this.state = {
-      chat: []
+      chat: [],
+      users: []
     }
+
   }
+
   _handleClick = () => {
     var msgUser = this.userName.value
     var msgText = this.userInput.value
     database
-      .ref(this.props.path)
+      .ref(`${this.props.path}/messages`)
       .push({username: msgUser, text: msgText})
     this.userInput.value = ""
 
   }
 
   componentDidMount() {
+
     database
-      .ref(this.props.path)
+      .ref(`${this.props.path}/messages`)
       .on('child_added', x => this.updateState(x.val()))
   }
 
   updateState = (data) => {
-    messages = messages.concat(data)
-    console.log(messages)
-    this.setState({chat: messages})
+
+    this.setState({
+      chat: this
+        .state
+        .chat
+        .concat([data])
+    })
   }
 
-  renderMessanges(data) {
+  renderMessanges(data, i) {
     return (
-      <div>
+      <div key={i}>
         {data.username}: {data.text}
       </div>
     )
