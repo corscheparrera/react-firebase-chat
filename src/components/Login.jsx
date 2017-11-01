@@ -1,5 +1,4 @@
 import React, {Component} from 'react'
-import fire from './Firebase.js'
 
 class Login extends Component {
 

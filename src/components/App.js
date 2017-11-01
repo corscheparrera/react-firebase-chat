@@ -6,9 +6,9 @@ class App extends Component {
     return (
       <div>
         <h1>Chat Room 1</h1>
-        <Chat path={'/chat1'} />
+        <Chat path={'chat1'} />
         <h1>Chat Room 2</h1>
-        <Chat path={'/chat2'} />
+        <Chat path={'chat2'} />
       </div>
     )
   }

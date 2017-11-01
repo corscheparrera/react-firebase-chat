@@ -15,24 +15,18 @@ class Chat extends Component {
   }
 
   _handleClick = () => {
-    var msgUser = this.userName.value
+    var msgUser = this.state.user
     var msgText = this.userInput.value
     database
-      .ref(`${this.props.path}/messages`)
+      .ref(`/messages-${this.props.path}`)
       .push({username: msgUser, text: msgText})
     this.userInput.value = ""
 
   }
 
   componentDidMount() {
-    // var ref = database.ref(`${this.props.path}/users`); var key = ref .push(true)
-    //   .key; database   .ref(`${this.props.path}/users/${key}`) .onDisconnect()
-    // .remove(); database   .ref(`${this.props.path}/users`) .on('child_removed',
-    // (snapshot) => {     database .ref(`${this.props.path}/messages`)
-    // .push({username: 'System', text: 'User disconnected'});   })
-
     database
-      .ref(`${this.props.path}/messages`)
+      .ref(`/messages-${this.props.path}`)
       .on('child_added', x => this.updateState(x.val()))
   }
 
@@ -47,8 +41,24 @@ class Chat extends Component {
   }
 
   handleUserLogin = (usernameValue) => {
-    this.setState({user: usernameValue})
+    this.setState({
+      user: usernameValue
+    }, () => this.pushUsernameFirebase())
+
   }
+  pushUsernameFirebase = () => {
+    database
+      .ref(`/users-${this.props.path}`)
+      .push({username: this.state.user, status: 'online'})
+    database
+      .ref('/users')
+      .onDisconnect()
+      .remove();
+    // database   .ref(`/users-$/{this.props.path}`)   .on('child_removed',
+    // (snapshot) => {     database       .ref(`$/{this.props.path}`)
+    // .push({username: 'System', text: 'Userdisconnected '});   })
+  }
+
   renderMessanges = (data, i) => {
     return (
       <div key={i}>
