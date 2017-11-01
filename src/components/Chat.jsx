@@ -47,18 +47,21 @@ class Chat extends Component {
 
   }
   pushUsernameFirebase = () => {
-    database
-      .ref(`/users-${this.props.path}`)
-      .push({username: this.state.user, status: 'online'})
-    database
-      .ref('/users')
-      .onDisconnect()
-      .remove();
-    // database   .ref(`/users-$/{this.props.path}`)   .on('child_removed',
-    // (snapshot) => {     database       .ref(`$/{this.props.path}`)
-    // .push({username: 'System', text: 'Userdisconnected '});   })
-  }
 
+    var ref = database.ref(`/users-${this.props.path}`)
+    var disconnectTask = {};
+    var pushId = ref
+      .push({username: this.state.user, status: 'online'})
+      .key
+    disconnectTask[pushId] = {
+      username: this.state.user,
+      status: 'offline'
+    };
+    ref
+      .onDisconnect()
+      .update(disconnectTask);
+
+  }
   renderMessanges = (data, i) => {
     return (
       <div key={i}>
